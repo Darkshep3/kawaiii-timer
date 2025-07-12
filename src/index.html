@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kawaiii Timer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="HTTYD.js"></script>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+      body {
+        font-family: "Press Start 2P", cursive;
+        background-color: #ffb0a3;
+        color: rgb(255, 105, 115);
+        text-align: center;
+        padding-top: 50px;
+      }
+
+      button {
+        background-color: rgb(255, 176, 163);
+        color: rgb(255, 105, 115);
+        border-radius: 8px;
+        height: 50px;
+        width: 200px;
+        font-size: 14px;
+        font-family: "Press Start 2P", cursive;
+        margin: 10px;
+        border: none;
+        cursor: pointer;
+      }
+
+      h1, p {
+        margin-bottom: 20px;
+      }
+    </style>
+
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div id="background-overlay">
+      <div id = "background"> <img src="backgrounds/cherryblossoms.png" id="overlay-image"> </div> 
+      <div id="minigames">
+        <div id="HTTYD" style="position: relative; width: 300px; height: 420px; margin: auto;">
+          <h1 id = "game-title" class="minigame-title">HOW TO TRAIN YOUR DRAGON</h1>
+          <p id = "press-start" class="press-start-text">PRESS SPACE TO PLAY</p>
+        </div>
+      </div>
+    </div>
+    <div id = "intro">
+      <div id = "blurb">Study Mode: Kawaii Edition~</div>
+      <h1></h1>
+      <a href="#">
+      <button onclick="goToTimer()">Start!</button>
+      </a> <br>
+    <button type="button" onclick="switchToSettings()">Settings</button> <br>
+    <button type="button" onclick="switchBackground()">Change Wardrobe</button>
+    
+    <button class="fireworks-button" onclick="startFlare()">🎇</button>
+    </div>
+
+    <div id="settings"> 
+      <div id = "settings-top">Settings:⚙️</div>
+      <div id="settings-bottom">
+        <input type="text" id="time-input" placeholder="01:00" maxlength="5" />
+        <button id="set-time-button" onclick="setTime()">Set Time</button>
+
+        <div id="quick-timer-buttons" style="margin-top: 10px; display: inline-block;">
+          <div class="button-row" style="margin-bottom: 10px;">
+            <button type="button" onclick="setQuickTime('05:00')">5 Minutes</button>
+            <button type="button" onclick="setQuickTime('10:00')">10 Minutes</button>
+          </div>
+          <div class="button-row">
+            <button type="button" onclick="setQuickTime('25:00')">25 Minutes</button>
+            <button type="button" onclick="setQuickTime('60:00')">60 Minutes</button>
+          </div>
+        </div>
+        
+        <p id="time-error" style="color:red; display:none;">Please enter time as MM:SS</p> 
+        <p id="time-success" style="display:none;">✨ Timer Set! ✨</p>
+        <label for="minigames-toggle">Minigames:</label>
+        <input type="checkbox" id="minigames-toggle" />
+      </div>
+    </div>
+
+    <div id="timer">
+      <div id = "time-top">Timer</div>
+      <img src="assets/cat-boba.gif" id="timer-left">
+      <div id = "time-bottom"> Time B4 Boba Break: <span id="time"></span>
+      <div id = "start-timer">
+      <button type="button" onclick="startCountdown()">Start</button>
+      </div>
+      <div id = "stop-timer">
+      <button type="button" onclick="stopCountdown()">Stop</button>
+      </div>
+      <div id = "resume-timer">
+      <button type="button" onclick="resumeCountdown()">Resume</button>
+      </div>
+      <div id = "end-timer">
+      <button type ="button" onclick="endCountdown()">End</button>
+      </div>
+      </div>
+    </div>
+
+    <div id = "back">
+      <img src="assets/back.png" id="back-button" alt="Go Back" />
+    </div>
+
+    <div id = "fireworks-display"> 
+      <canvas id = "fireworks"> </canvas>
+    </div>
+
+    <div id = "top-bar">Kawaiii Timer
+      <img src="assets/minimize.png" id="minimize" alt="minimize" />
+      <img src="assets/exit.png" id="exit" alt="exit" />
+    </div>
+    
+    <script>
+      var time = "25:00";
+      document.getElementById("time").textContent = time;
+    </script>
+
+    <script src = "minigames.js"> </script>
+    <script src = "settings.js"></script>
+    <script src = "wardrobe.js"></script>
+    <script src="fireworks.js"></script>
+    <script src="backarrow.js"></script>
+    <script src="timer.js"></script>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      document.getElementById('exit').addEventListener('click', () => {
+        ipcRenderer.send('close-app');
+      });
+
+      document.getElementById('minimize').addEventListener('click', () => {
+        ipcRenderer.send('minimize-app');
+      });
+    </script>
+        
+  </body>
+</html>

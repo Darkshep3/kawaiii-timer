@@ -1,0 +1,461 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffb0a3;
+}
+
+body {
+  font-family: 'Press Start 2P', cursive;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  will-change: opacity, visibility;
+  z-index: 0;
+}
+
+button {
+  width: 50%;
+  height: 100%;
+  font-family: 'Press Start 2P', cursive;
+  border: 2px solid rgb(255, 105, 115);
+  background-color: rgb(255, 176, 163);
+  color: rgb(255, 105, 115);
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+button:hover,
+button:focus {
+  background-color: rgb(255, 105, 115);
+  color: white;
+  transform: scale(1.05);
+}
+
+#timer, #settings, #minigames {
+  display: none;
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 280px;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 10;
+
+  background-color: #ffeecc; 
+  color: #46425e;
+  border: 3px solid rgb(70, 66, 94);
+  border-radius: 6px;
+  padding: 15px 8px 8px 8px;
+
+  box-shadow: 0 0 10px rgba(0,0,0,0.2); 
+}
+
+#settings{
+  top: 50px;
+}
+#back{
+  display: none;
+}
+
+
+#timer.show,
+#back.show,
+#settings.show,
+#minigames.show {
+  display: block;
+}
+
+#intro {
+  font-size: 150%;
+  position: fixed;     
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 280px;
+  width: 100%;
+  margin: 0;
+  z-index: 10;
+  transition: opacity 0.3s ease;
+  background-color: transparent;
+  user-select: none;
+  pointer-events: auto;
+  text-shadow: 
+    1px 1px 0 #ffb0a3, /* Top-right */
+    -1px 1px 0 #ffb0a3, /* Top-left */
+    1px -1px 0 #ffb0a3, /* Bottom-right */
+    -1px -1px 0 #ffb0a3;
+}
+
+#back-button {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 30px;
+  height: auto;
+  z-index: 100;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+#back-button:hover {
+  transform: scale(1.1);
+}
+
+.fireworks-button {
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+  margin: auto;
+  width: auto;
+  height: auto;
+  z-index: 1000;
+  cursor: pointer;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+canvas#fireworks {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  background: transparent;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+#fireworks-display {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  will-change: opacity;
+}
+
+#background-overlay {
+  position: absolute;
+  width: 300px;
+  height: 365px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  padding: 20px 8px 8px 8px;
+  box-sizing: border-box;
+  overflow: visible;
+  border: 3px solid rgb(21, 120, 140);
+  background-color: transparent;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+
+  /* Add relative positioning to serve as container */
+  position: relative;
+}
+
+
+#background-overlay img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+#overlay-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+#minigames {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.minigame-container {
+  position: relative;
+  margin: auto;
+  height: 150px;
+  width: 300px;
+  border:3px rgb(21, 120, 140)
+}
+.minigame-image {
+  width: 300px;
+  height: auto;
+  display: block;
+}
+
+.minigame-title {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 5px black;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 5px 10px;
+  border-radius: 6px;
+  animation: flash 1s infinite;
+  will-change: opacity;
+}
+
+.press-start-text {
+  font-family: "Press Start 2P", cursive;
+  font-size: 12px;
+  color: yellow;
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: flash 1s infinite;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px;
+  border-radius: 4px;
+  z-index: 10;
+  will-change: opacity;
+}
+
+@keyframes flash {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+#HTTYD {
+  position: absolute;
+  top: -40px;    
+  left: -19px;   
+  width: 100%; 
+  height: 100%; 
+  background: transparent;
+  z-index: 2;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+#flappy-canvas {
+  position: absolute;
+  top: 20px;
+  left: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 28px);
+  z-index: 2;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+#blurb {
+  animation: flash 2s infinite;
+  will-change: opacity;
+}
+
+#settings-top{
+  position: relative; 
+  top: -3px;
+  left: -20px;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+#settings-bottom{
+  top: 5px;
+  position: relative; 
+  font-size: 15px;
+  font-weight: 400;
+}
+
+#time-top{
+  position: relative; 
+  top: -10px;
+  left: -75px;
+  font-size: 20px;
+  font-weight: 900;
+}
+#timer-left{
+  position:relative;
+  width: 60px;
+  height:60px;
+  left: -93px;
+  top: 15px;
+}
+
+#time-bottom{
+  top: -40px;
+  left: 35px;
+  position: relative; 
+  font-size: 15px;
+  font-weight: 400;
+}
+
+#time-input {
+  width: 160px;
+  padding: 8px;
+  font-size: 14px;
+  text-align: center;
+  background: #fff5f5;
+  border: 2px solid #ffb0a3;
+  border-radius: 12px;
+  font-family: "Press Start 2P", cursive;
+  color: #ff6973;
+  outline: none;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  transition: box-shadow 0.3s ease;
+}
+
+#time-input:focus {
+  box-shadow: 0 0 8px rgba(255, 176, 163, 0.8);
+}
+
+#time-error {
+  color: red;
+  font-size: 10px;
+  font-family: "Press Start 2P", cursive;
+  margin-top: 4px;
+  display: none;
+}
+
+#set-time-button {
+  background-color: #ffd6d6;
+  color: #ff6973;
+  font-family: "Press Start 2P", cursive;
+  font-size: 12px;
+  border: 2px solid #ffb0a3;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#set-time-button:hover {
+  background-color: #ffe2e2;
+  transform: scale(1.05);
+}
+
+#time-success {
+  color: #ff69b5;
+  font-family: "Press Start 2P", cursive;
+  font-size: 10px;
+  margin-top: 6px;
+  animation: fadePop 1s ease-out;
+}
+
+@keyframes fadePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+#time-success {
+  color: #d155b0; 
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-top: 10px;
+  user-select: none;
+  display: none;
+  animation-fill-mode: forwards;
+}
+
+#quick-timer-buttons {
+  position:relative;
+  left: -10px;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  gap: 20px; 
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px; 
+}
+.button-group {
+  display: flex;
+  gap: 10px; 
+}
+
+#top-bar{
+  position:relative;
+  font-size: 13px;
+  top: -360px;
+  left: -30px;
+}
+
+#exit{
+  position:relative;
+  left: 60px;
+}
+#exit:hover, #minimize:hover{
+  transform: scale(1.05);
+}
+
+#minimize{
+  position:relative;
+  left: 60px;
+}

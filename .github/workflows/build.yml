@@ -1,90 +1,40 @@
-name: Build and Release Electron App
+name: Build Electron App
 
 on:
   push:
     branches:
       - main
-  release:
-    types: [created]
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-latest, macos-latest]
         node-version: [18.x]
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Set Electron arch (macOS Intel fallback)
+        if: matrix.os == 'macos-latest'
+        run: echo "ELECTRON_ARCH=x64" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build app with Electron Forge
+      - name: Build Electron app with Forge
         run: npm run make
 
-      - name: List build output
-        run: ls -l out/make
-
-      # Upload artifacts (optional, useful for debugging)
-      - name: Upload build artifacts
+      - name: Upload built app
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
           path: out/make/
-  release-upload:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release'
-
-    steps:
-      - name: Download Windows build artifact
-        if: contains(matrix.os, 'windows-latest')
-        uses: actions/download-artifact@v3
-        with:
-          name: build-windows-latest
-          path: ./windows_build
-
-      - name: Download Mac build artifact
-        if: contains(matrix.os, 'macos-latest')
-        uses: actions/download-artifact@v3
-        with:
-          name: build-macos-latest
-          path: ./mac_build
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Windows installer to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./windows_build/squirrel.windows/KawaiiiTimerSetup.exe
-          asset_name: KawaiiiTimerSetup.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload Mac zip to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./mac_build/zip/KawaiiiTimer-macos.zip
-          asset_name: KawaiiiTimer-macos.zip

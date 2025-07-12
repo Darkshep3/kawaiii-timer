@@ -32,11 +32,22 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'], // macOS
+      platforms: ['darwin'], // macOS ZIP archive
       config: {
         icon: path.resolve(__dirname, 'assets/icon.icns'),
+      },
     },
-  },
+    {
+      name: '@electron-forge/maker-dmg', // macOS .dmg installer
+      platforms: ['darwin'],
+      config: {
+        icon: path.resolve(__dirname, 'assets/icon.icns'),
+        overwrite: true,
+        // You can add more dmg options here if desired:
+        // background: path.resolve(__dirname, 'assets/background.png'),
+        // contents: [ ... ],
+      },
+    },
   ],
   plugins: [
     {

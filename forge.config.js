@@ -4,8 +4,8 @@ const path = require('path');
 
 module.exports = {
   packagerConfig: {
-    asar: true, // bundle into one archive
-    icon: path.resolve(__dirname, 'assets/icon'), // no file extension
+    asar: true,
+    icon: path.resolve(__dirname, 'assets/icon'), // no extension, Electron picks .ico/.icns automatically
     ignore: [
       'docs',
       'tests',
@@ -18,7 +18,7 @@ module.exports = {
       '.*\\.md',
       'node_modules/\\.cache',
       'src/debug-tools',
-    ]
+    ],
   },
   rebuildConfig: {},
   makers: [
@@ -26,16 +26,22 @@ module.exports = {
       name: '@electron-forge/maker-squirrel',
       config: {
         name: 'KawaiiiTimer',
-        setupIcon: path.resolve(__dirname, 'assets/icon.ico'), // Optional: your .ico icon for the installer
+        setupIcon: path.resolve(__dirname, 'assets/icon.ico'),
         shortcutName: 'Kawaiii Timer',
-        loadingGif: path.resolve(__dirname, 'assets/loading.gif'), // Optional: cute loading screen!
-      }
-    }
+      },
+    },
+    {
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin'],
+      config: {
+        icon: path.resolve(__dirname, 'assets/icon.icns'),
+      },
+    },
   ],
   plugins: [
     {
       name: '@electron-forge/plugin-auto-unpack-natives',
-      config: {}
+      config: {},
     },
     new FusesPlugin({
       version: FuseVersion.V1,
@@ -44,7 +50,7 @@ module.exports = {
       [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
       [FuseV1Options.EnableNodeCliInspectArguments]: false,
       [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
-      [FuseV1Options.OnlyLoadAppFromAsar]: true
-    })
-  ]
+      [FuseV1Options.OnlyLoadAppFromAsar]: true,
+    }),
+  ],
 };

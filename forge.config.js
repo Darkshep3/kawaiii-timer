@@ -31,12 +31,12 @@ module.exports = {
       },
     },
     {
-      name: '@electron-forge/maker-dmg', // Mac installer (.dmg)
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin'], // macOS
       config: {
         icon: path.resolve(__dirname, 'assets/icon.icns'),
-        overwrite: true,
-      },
     },
+  },
   ],
   plugins: [
     {

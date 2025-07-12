@@ -33,8 +33,20 @@ jobs:
       - name: Build Electron app with Forge
         run: npm run make
 
-      - name: Upload built app
+      - name: Upload build artifacts to workflow
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
           path: out/make/
+
+      - name: Upload .exe and .dmg to GitHub Release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Release ${{ github.run_number }}"
+          tag_name: "v${{ github.run_number }}"
+          files: |
+            out/make/**/*.exe
+            out/make/**/*.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -23,7 +23,7 @@ module.exports = {
   rebuildConfig: {},
   makers: [
     {
-      name: '@electron-forge/maker-squirrel',
+      name: '@electron-forge/maker-squirrel', // Windows installer (.exe)
       config: {
         name: 'KawaiiiTimer',
         setupIcon: path.resolve(__dirname, 'assets/icon.ico'),
@@ -31,10 +31,10 @@ module.exports = {
       },
     },
     {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      name: '@electron-forge/maker-dmg', // Mac installer (.dmg)
       config: {
         icon: path.resolve(__dirname, 'assets/icon.icns'),
+        overwrite: true,
       },
     },
   ],

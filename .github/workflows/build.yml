@@ -35,11 +35,10 @@ jobs:
 
       # Upload artifacts (optional, useful for debugging)
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
           path: out/make/
-
   release-upload:
     needs: build
     runs-on: ubuntu-latest

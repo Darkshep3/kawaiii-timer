@@ -4,26 +4,49 @@ const { execSync } = require('child_process');
 
 const makeDir = path.resolve(__dirname, '..', 'out', 'make');
 
-const buildFolders = fs.readdirSync(makeDir).filter(f => f.toLowerCase().includes('darwin'));
+console.log('Looking for build folders inside:', makeDir);
+
+let dirEntries;
+try {
+  dirEntries = fs.readdirSync(makeDir);
+} catch (err) {
+  console.error(`Failed to read directory ${makeDir}:`, err.message);
+  process.exit(1);
+}
+
+console.log('Found entries:', dirEntries);
+
+const buildFolders = dirEntries.filter(f => f.toLowerCase().includes('darwin'));
+
 if (buildFolders.length === 0) {
   console.error('No darwin build folder found!');
   process.exit(1);
 }
 
-// Assuming only one build folder, take the first
+console.log('Darwin build folders:', buildFolders);
+
 const buildFolder = buildFolders[0];
 const buildFolderPath = path.join(makeDir, buildFolder);
 
-const appBundles = fs.readdirSync(buildFolderPath).filter(f => f.endsWith('.app'));
+let buildFolderContents;
+try {
+  buildFolderContents = fs.readdirSync(buildFolderPath);
+} catch (err) {
+  console.error(`Failed to read build folder ${buildFolderPath}:`, err.message);
+  process.exit(1);
+}
+
+console.log(`Contents of build folder (${buildFolderPath}):`, buildFolderContents);
+
+const appBundles = buildFolderContents.filter(f => f.endsWith('.app'));
 if (appBundles.length === 0) {
   console.error('No .app bundle found in:', buildFolderPath);
   process.exit(1);
 }
 
-// Take first .app found
 const appPath = path.join(buildFolderPath, appBundles[0]);
 
-console.log(`Found app at: ${appPath}`);
+console.log(`Found app bundle: ${appPath}`);
 console.log('Running xattr -cr to clear quarantine attribute...');
 
 try {

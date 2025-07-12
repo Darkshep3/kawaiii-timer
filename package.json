@@ -9,7 +9,9 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "postmake": "xattr -cr out/Kawaiii\\ Timer-darwin-x64/Kawaiii\\ Timer.app"
+
   },
   "keywords": [],
   "author": {

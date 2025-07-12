@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+  # Also trigger on tags to release:
+  release:
+    types: [published]
+  # or on tag push:
+  # push:
+  #   tags:
+  #     - 'v*'
+
+permissions:
+  contents: write  # needed for release action
 
 jobs:
   build:
@@ -33,20 +43,36 @@ jobs:
       - name: Build Electron app with Forge
         run: npm run make
 
-      - name: Upload build artifacts to workflow
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
           path: out/make/
 
-      - name: Upload .exe and .dmg to GitHub Release
-        if: github.ref == 'refs/heads/main'
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download Windows build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-windows-latest
+          path: ./build/windows
+
+      - name: Download macOS build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-macos-latest
+          path: ./build/macos
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          name: "Release ${{ github.run_number }}"
-          tag_name: "v${{ github.run_number }}"
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           files: |
-            out/make/**/*.exe
-            out/make/**/*.dmg
+            ./build/windows/**/*.exe
+            ./build/macos/**/*.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

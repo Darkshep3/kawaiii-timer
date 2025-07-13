@@ -4,21 +4,24 @@ const path = require('path');
 
 module.exports = {
   packagerConfig: {
-    asar: true,
-    icon: path.resolve(__dirname, 'assets/icon'), // no extension, Electron picks .ico/.icns automatically
-    ignore: [
-      'docs',
-      'tests',
-      'forge.config.js',
-      'README.md',
-      'package-lock.json',
-      '\\.gitignore',
-      '\\.DS_Store',
-      '.*\\.map',
-      '.*\\.md',
-      'node_modules/\\.cache',
-      'src/debug-tools',
-    ],
+packagerConfig: {
+  asar: true,
+  icon: path.resolve(__dirname, 'assets/icon'),
+  arch: 'x64',  // <-- here
+  ignore: [
+    'docs',
+    'tests',
+    'forge.config.js',
+    'README.md',
+    'package-lock.json',
+    '\\.gitignore',
+    '\\.DS_Store',
+    '.*\\.map',
+    '.*\\.md',
+    'node_modules/\\.cache',
+    'src/debug-tools',
+  ],
+},
   },
   rebuildConfig: {},
   makers: [

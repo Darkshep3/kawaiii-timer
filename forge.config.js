@@ -4,24 +4,22 @@ const path = require('path');
 
 module.exports = {
   packagerConfig: {
-packagerConfig: {
-  asar: true,
-  icon: path.resolve(__dirname, 'assets/icon'),
-  arch: 'x64',  // <-- here
-  ignore: [
-    'docs',
-    'tests',
-    'forge.config.js',
-    'README.md',
-    'package-lock.json',
-    '\\.gitignore',
-    '\\.DS_Store',
-    '.*\\.map',
-    '.*\\.md',
-    'node_modules/\\.cache',
-    'src/debug-tools',
-  ],
-},
+    asar: true,                 // must be true or an object for the plugin
+    icon: path.resolve(__dirname, 'assets/icon'),
+    arch: 'x64',                // target Intel Macs
+    ignore: [
+      'docs',
+      'tests',
+      'forge.config.js',
+      'README.md',
+      'package-lock.json',
+      '\\.gitignore',
+      '\\.DS_Store',
+      '.*\\.map',
+      '.*\\.md',
+      'node_modules/\\.cache',
+      'src/debug-tools',
+    ],
   },
   rebuildConfig: {},
   makers: [
@@ -34,13 +32,12 @@ packagerConfig: {
       },
     },
     {
-    name: '@electron-forge/maker-zip',
-    platforms: ['darwin'],
-    config: {
-      icon: path.resolve(__dirname, 'assets/icon.icns'),
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin'],
+      config: {
+        icon: path.resolve(__dirname, 'assets/icon.icns'),
+      },
     },
-  }
-
   ],
   plugins: [
     {

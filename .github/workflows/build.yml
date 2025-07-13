@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-x64-build
-          path: out/make/x64/darwin  # Upload entire darwin folder to include .app and .zip
+          path: out/make/darwin/x64  # Corrected path
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -78,7 +78,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-arm64-build
-          path: out/make/arm64/darwin  # Upload entire darwin folder
+          path: out/make/darwin/arm64  # Corrected path
 
   release:
     needs: [build-windows, build-macos-x64, build-macos-arm64]

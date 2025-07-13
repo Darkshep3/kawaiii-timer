@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: out/make/win32/x64/  # Adjust if your output differs
+          path: out/make/win32/x64/
 
   build-macos-x64:
     runs-on: macos-latest
@@ -55,11 +55,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-x64-build
-          # Upload the entire darwin folder, zipped output or .app directly
-          # Adjust as needed if you want zipped or unzipped
-          path: |
-            out/make/x64/darwin/Kawaiii Timer.app
-            out/make/x64/zip/darwin/Kawaiii Timer.zip
+          path: out/make/x64/darwin  # Upload entire darwin folder to include .app and .zip
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -82,9 +78,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-arm64-build
-          path: |
-            out/make/arm64/darwin/Kawaiii Timer.app
-            out/make/arm64/zip/darwin/Kawaiii Timer.zip
+          path: out/make/arm64/darwin  # Upload entire darwin folder
 
   release:
     needs: [build-windows, build-macos-x64, build-macos-arm64]

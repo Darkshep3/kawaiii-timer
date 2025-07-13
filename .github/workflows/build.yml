@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: out/make/win32/x64/
+          path: out/make/   # <-- Changed this to the root out/make folder
 
   build-macos-x64:
     runs-on: macos-latest

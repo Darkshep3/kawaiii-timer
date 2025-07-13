@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: out/make/win32/x64/
+          path: out/make/win32/x64/  # Adjust if your output differs
 
   build-macos-x64:
     runs-on: macos-latest
@@ -48,17 +48,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build macOS x64 app (Rosetta)
+      - name: Build macOS x64 app
         run: npm run make:x64
-
-      - name: List macOS x64 build output
-        run: ls -la out/make/x64/zip/darwin/x64/
 
       - name: Upload macOS x64 build artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-x64-build
-          path: out/make/x64/zip/darwin/x64/
+          # Upload the entire darwin folder, zipped output or .app directly
+          # Adjust as needed if you want zipped or unzipped
+          path: |
+            out/make/x64/darwin/Kawaiii Timer.app
+            out/make/x64/zip/darwin/Kawaiii Timer.zip
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -74,22 +75,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build macOS arm64 app (Apple Silicon native)
+      - name: Build macOS arm64 app
         run: npm run make:arm64
-
-      - name: List macOS arm64 build output
-        run: ls -la out/make/arm64/zip/darwin/arm64/
 
       - name: Upload macOS arm64 build artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-arm64-build
-          path: out/make/arm64/zip/darwin/arm64/
+          path: |
+            out/make/arm64/darwin/Kawaiii Timer.app
+            out/make/arm64/zip/darwin/Kawaiii Timer.zip
 
   release:
     needs: [build-windows, build-macos-x64, build-macos-arm64]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
+
     steps:
       - name: Download Windows build artifact
         uses: actions/download-artifact@v4

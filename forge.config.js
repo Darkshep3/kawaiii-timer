@@ -4,9 +4,9 @@ const path = require('path');
 
 module.exports = {
   packagerConfig: {
-    asar: true,                 // must be true or an object for the plugin
+    asar: true,
+    arch: 'x64',  // <-- target Intel Macs explicitly
     icon: path.resolve(__dirname, 'assets/icon'),
-    arch: 'universal',
     ignore: [
       'docs',
       'tests',
@@ -24,7 +24,7 @@ module.exports = {
   rebuildConfig: {},
   makers: [
     {
-      name: '@electron-forge/maker-squirrel', // Windows installer (.exe)
+      name: '@electron-forge/maker-squirrel',
       config: {
         name: 'KawaiiiTimer',
         setupIcon: path.resolve(__dirname, 'assets/icon.ico'),

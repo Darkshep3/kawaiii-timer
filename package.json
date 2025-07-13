@@ -10,7 +10,9 @@
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
     "postmake": "node scripts/postmake.js",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "make:x64": "electron-forge make --arch x64"
+
 
   },
   "keywords": [],

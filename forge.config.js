@@ -6,7 +6,7 @@ module.exports = {
   packagerConfig: {
     asar: true,                 // must be true or an object for the plugin
     icon: path.resolve(__dirname, 'assets/icon'),
-    arch: 'x64',                // target Intel Macs
+    arch: 'universal',
     ignore: [
       'docs',
       'tests',

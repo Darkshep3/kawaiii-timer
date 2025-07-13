@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = {
   packagerConfig: {
     asar: true,
-    arch: 'x64',  // <-- target Intel Macs explicitly
+    arch: 'universal',  // <-- target Intel Macs explicitly
     icon: path.resolve(__dirname, 'assets/icon'),
     ignore: [
       'docs',

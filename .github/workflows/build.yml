@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: out/make/win32/x64/
+          path: out/make/win32/x64/  # Adjust if needed
 
   build-macos-x64:
     runs-on: macos-latest
@@ -51,11 +51,24 @@ jobs:
       - name: Build macOS x64 app
         run: npm run make:x64
 
-      - name: Upload macOS x64 build artifact
+      - name: Debug ls out/make after x64 build
+        run: |
+          echo "Listing out/make directory:"
+          ls -la out/make
+          echo "Listing out/make/darwin directory:"
+          ls -la out/make/darwin || echo "No darwin folder found"
+          echo "Listing out/make/darwin/x64 directory:"
+          ls -la out/make/darwin/x64 || echo "No x64 folder found"
+          echo "Finding all .app files under out/make:"
+          find out/make -name '*.app' || echo "No .app files found"
+          echo "Finding all .zip files under out/make:"
+          find out/make -name '*.zip' || echo "No .zip files found"
+
+      - name: Upload macOS x64 build artifact (UPDATE PATH AFTER DEBUG)
         uses: actions/upload-artifact@v4
         with:
           name: macos-x64-build
-          path: out/make/darwin/x64  # Corrected path
+          path: out/make/darwin/x64/Kawaiii\ Timer.app  # <-- Temporary, likely to update
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -74,17 +87,29 @@ jobs:
       - name: Build macOS arm64 app
         run: npm run make:arm64
 
-      - name: Upload macOS arm64 build artifact
+      - name: Debug ls out/make after arm64 build
+        run: |
+          echo "Listing out/make directory:"
+          ls -la out/make
+          echo "Listing out/make/darwin directory:"
+          ls -la out/make/darwin || echo "No darwin folder found"
+          echo "Listing out/make/darwin/arm64 directory:"
+          ls -la out/make/darwin/arm64 || echo "No arm64 folder found"
+          echo "Finding all .app files under out/make:"
+          find out/make -name '*.app' || echo "No .app files found"
+          echo "Finding all .zip files under out/make:"
+          find out/make -name '*.zip' || echo "No .zip files found"
+
+      - name: Upload macOS arm64 build artifact (UPDATE PATH AFTER DEBUG)
         uses: actions/upload-artifact@v4
         with:
           name: macos-arm64-build
-          path: out/make/darwin/arm64  # Corrected path
+          path: out/make/darwin/arm64/Kawaiii\ Timer.app  # <-- Temporary, likely to update
 
   release:
     needs: [build-windows, build-macos-x64, build-macos-arm64]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
-
     steps:
       - name: Download Windows build artifact
         uses: actions/download-artifact@v4
@@ -111,7 +136,6 @@ jobs:
           name: Release ${{ github.ref_name }}
           files: |
             ./build/windows/**/*.exe
-            ./build/macos/x64/**/*.zip
-            ./build/macos/arm64/**/*.zip
+            ./build/macos/**/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

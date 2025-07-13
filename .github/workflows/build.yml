@@ -12,12 +12,7 @@ permissions:
 
 jobs:
   build-windows:
-    if: matrix.os == 'windows-latest'
     runs-on: windows-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -25,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
 
       - name: Install dependencies
         run: npm ci
@@ -37,22 +32,21 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: out/make/win32/x64/  # Adjust path if needed
+          path: out/make/win32/x64/  # Adjust if needed
 
   build-macos-x64:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build macOS x64 app
         run: npm run make:x64
@@ -65,18 +59,17 @@ jobs:
 
   build-macos-arm64:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build macOS arm64 app
         run: npm run make:arm64
@@ -90,11 +83,12 @@ jobs:
   make-universal-macos:
     needs: [build-macos-x64, build-macos-arm64]
     runs-on: macos-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
 
@@ -110,7 +104,8 @@ jobs:
           name: macos-arm64-build
           path: ./out/make/arm64/zip/darwin/arm64
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run make-universal.js to create universal binary
         run: node scripts/make-universal.js
@@ -125,7 +120,6 @@ jobs:
     needs: [build-windows, make-universal-macos]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
-
     steps:
       - name: Download Windows build artifact
         uses: actions/download-artifact@v3

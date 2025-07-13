@@ -11,9 +11,10 @@
     "lint": "echo \"No linting configured\"",
     "postmake": "node scripts/postmake.js",
     "make": "electron-forge make",
-    "make:x64": "electron-forge make --arch x64"
-
-
+    "make:x64": "electron-forge make --arch x64",
+    "make:arm64": "electron-forge make --arch arm64",
+    "make:universal": "node scripts/make-universal.js",
+    "make:all": "npm run make:x64 && npm run make:arm64 && npm run make:universal"
   },
   "keywords": [],
   "author": {

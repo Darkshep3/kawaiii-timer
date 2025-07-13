@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = {
   packagerConfig: {
     asar: true,
-    arch: 'universal',  // <-- target Intel Macs explicitly
+    // arch: 'universal',  // ❌ Not valid in Electron Forge — handled manually
     icon: path.resolve(__dirname, 'assets/icon'),
     ignore: [
       'docs',

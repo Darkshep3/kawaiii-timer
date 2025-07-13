@@ -4,24 +4,18 @@ on:
   push:
     branches:
       - main
-  # Also trigger on tags to release:
   release:
     types: [published]
-  # or on tag push:
-  # push:
-  #   tags:
-  #     - 'v*'
 
 permissions:
   contents: write  # needed for release action
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  build-windows:
+    if: matrix.os == 'windows-latest'
+    runs-on: windows-latest
     strategy:
-      fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
         node-version: [18.x]
 
     steps:
@@ -33,37 +27,116 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Set Electron arch (macOS Intel fallback)
-        if: matrix.os == 'macos-latest'
-        run: echo "ELECTRON_ARCH=x64" >> $GITHUB_ENV
-
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build Electron app with Forge
-        run: npm run make
+      - name: Build Windows x64 app
+        run: npm run make:x64
 
-      - name: Upload build artifacts
+      - name: Upload Windows build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.os }}
-          path: out/make/
+          name: windows-build
+          path: out/make/win32/x64/  # Adjust path if needed
+
+  build-macos-x64:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm ci
+
+      - name: Build macOS x64 app
+        run: npm run make:x64
+
+      - name: Upload macOS x64 build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-x64-build
+          path: out/make/x64/zip/darwin/x64/Kawaiii Timer.app
+
+  build-macos-arm64:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm ci
+
+      - name: Build macOS arm64 app
+        run: npm run make:arm64
+
+      - name: Upload macOS arm64 build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-arm64-build
+          path: out/make/arm64/zip/darwin/arm64/Kawaiii Timer.app
+
+  make-universal-macos:
+    needs: [build-macos-x64, build-macos-arm64]
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+
+      - name: Download macOS x64 build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: macos-x64-build
+          path: ./out/make/x64/zip/darwin/x64
+
+      - name: Download macOS arm64 build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: macos-arm64-build
+          path: ./out/make/arm64/zip/darwin/arm64
+
+      - run: npm ci
+
+      - name: Run make-universal.js to create universal binary
+        run: node scripts/make-universal.js
+
+      - name: Upload macOS universal build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-universal-build
+          path: out/Kawaiii-Timer-universal.zip
 
   release:
-    needs: build
+    needs: [build-windows, make-universal-macos]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
+
     steps:
       - name: Download Windows build artifact
         uses: actions/download-artifact@v3
         with:
-          name: build-windows-latest
+          name: windows-build
           path: ./build/windows
 
-      - name: Download macOS build artifact
+      - name: Download macOS universal build artifact
         uses: actions/download-artifact@v3
         with:
-          name: build-macos-latest
+          name: macos-universal-build
           path: ./build/macos
 
       - name: Create GitHub Release
@@ -73,6 +146,6 @@ jobs:
           name: Release ${{ github.ref_name }}
           files: |
             ./build/windows/**/*.exe
-            ./build/macos/**/*.dmg
+            ./build/macos/**/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

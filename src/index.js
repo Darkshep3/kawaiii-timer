@@ -68,10 +68,6 @@ mainWindow = new BrowserWindow({
   });
 };
 
-// Quit on install/uninstall (Windows)
-if (require('electron-squirrel-startup')) {
-  app.quit();
-}
 
 // App lifecycle
 app.whenReady().then(() => {

@@ -1,6 +1,6 @@
 Enjoy this cute aesthetic timer app I made :3 
 
-<img width="285" height="373" alt="image" src="https://github.com/user-attachments/assets/fe457cdd-9dd8-469a-b6a4-f0e3da3fbc32" />
+<img width="285" height="373" alt="image" src="https://github.com/user-attachments/assets/c8f8f855-669c-4134-858d-13c5251736d1" />
 
 I will be adding more features, maybe sound or other requests you guys send :D
 

@@ -9,3 +9,5 @@ I will be adding more features, maybe sound or other requests you guys send :D
 Try the secret minigame option if you finish doing your homework!  
 
 Note for MAC Users: Please type xattr -cr "/Applications/Kawaiii Timer.app" or xattr -cr <file location> to remove macs restriction on non "apple developer" app developers
+
+<img width="285" height="373" alt="image" src="https://github.com/user-attachments/assets/757d4657-702e-47eb-bd59-6d36ede6e00d" />
